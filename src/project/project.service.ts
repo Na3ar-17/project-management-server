@@ -3,10 +3,14 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { slugify } from 'src/utils/slugGenerator';
+import { StatisticsService } from 'src/statistics/statistics.service';
 
 @Injectable()
 export class ProjectService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private statisticsService: StatisticsService,
+  ) {}
 
   async getById(userId: string, id: string) {
     const project = await this.prisma.project.findUnique({
@@ -56,18 +60,20 @@ export class ProjectService {
       },
     });
 
+    const statistics = await this.statisticsService.create(project.id);
+
     return project;
   }
 
   async delete(userId: string, id: string) {
     const project = await this.getById(userId, id);
 
+    await this.statisticsService.delete(project.id);
+
     const deleted = await this.prisma.project.delete({
       where: {
         id: project.id,
-        user: {
-          id: project.userId,
-        },
+        userId,
       },
     });
 
