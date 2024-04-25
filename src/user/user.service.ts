@@ -31,6 +31,8 @@ export class UserService {
   async getProfile(id: string) {
     const profile = await this.getById(id);
 
-    const {} = profile;
+    const { password, ...rest } = profile;
+
+    return rest;
   }
 }
