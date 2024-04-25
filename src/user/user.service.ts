@@ -51,7 +51,7 @@ export class UserService {
     return user;
   }
 
-  async update(dto: UpdateUserDto) {
+  async update(id: string, dto: UpdateUserDto) {
     let data = dto;
     if (dto.password) {
       data = { ...dto, password: await hash(dto.password) };
@@ -59,7 +59,7 @@ export class UserService {
 
     const user = await this.prisma.user.update({
       where: {
-        id: dto.id,
+        id,
       },
       data,
 

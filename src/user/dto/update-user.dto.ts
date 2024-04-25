@@ -4,8 +4,5 @@ import { IsString } from 'class-validator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
-  id: string;
-
-  @IsString()
   imgLink: string;
 }
