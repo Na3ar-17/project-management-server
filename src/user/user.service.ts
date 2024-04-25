@@ -50,4 +50,27 @@ export class UserService {
 
     return user;
   }
+
+  async update(dto: UpdateUserDto) {
+    let data = dto;
+    if (dto.password) {
+      data = { ...dto, password: await hash(dto.password) };
+    }
+
+    const user = await this.prisma.user.update({
+      where: {
+        id: dto.id,
+      },
+      data,
+
+      select: {
+        fullName: true,
+        companyName: true,
+        imgLink: true,
+        email: true,
+      },
+    });
+
+    return user;
+  }
 }
