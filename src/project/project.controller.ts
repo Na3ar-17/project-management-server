@@ -28,4 +28,10 @@ export class ProjectController {
   async create(@CurrentUser('id') userId: string) {
     return await this.projectService.create(userId);
   }
+
+  @Delete('delete/:id')
+  @Auth()
+  async delete(@CurrentUser('id') userId: string, @Param('id') id: string) {
+    return await this.projectService.delete(userId, id);
+  }
 }

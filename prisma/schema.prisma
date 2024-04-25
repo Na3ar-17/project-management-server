@@ -38,6 +38,21 @@ model Project {
   user User? @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
+  tatistics Statistics?
+
   @@map("projects")
 }
 
+
+model Statistics {
+  projectId String @map("project_id") @id
+  project Project? @relation(fields: [projectId], references: [id])
+
+  tasksCompleted Int @default(0) @map("tasks_completed")
+  tasksCreated Int @default(0) @map("tasks_created")
+  tasksDeleted Int @default(0) @map("tasks_deleted")
+  members Int @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
