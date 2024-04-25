@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
+import { verify } from 'argon2';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  EXPIRE_DAY_REFRESH_TOKEN = 1;
+  REFRESH_TOKEN_NAME = 'refreshToken';
+
+  constructor(
+    private jwt: JwtService,
+    private userService: UserService,
+  ) {}
+
+  async login(dto: CreateAuthDto) {
+    const { password, ...user } = await this.validate(dto);
+    const tokens = this.issueTokens(user.id);
+
+    return {
+      user,
+      ...tokens,
+    };
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  private issueTokens(userId: string) {
+    const data = { id: userId };
+
+    const accessToken = this.jwt.sign(data, {
+      expiresIn: '1h',
+    });
+
+    const refreshToken = this.jwt.sign(data, {
+      expiresIn: '7d',
+    });
+
+    return { accessToken, refreshToken };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  private async validate(dto: CreateAuthDto) {
+    const user = await this.userService.getByEmail(dto.email);
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+    if (!user)
+      throw new NotFoundException(`User with email: ${dto.email} not found`);
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    const isValid = await verify(user.password, dto.password);
+
+    if (!isValid) throw new UnauthorizedException('Invalid password');
+
+    return user;
   }
 }
