@@ -19,4 +19,18 @@ export class UserService {
 
     return user;
   }
+
+  async getByEmail(email: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
+
+  async getProfile(id: string) {
+    const profile = await this.getById(id);
+
+    const {} = profile;
+  }
 }
