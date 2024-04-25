@@ -59,3 +59,19 @@ model Statistics {
 
   @@map("statistics")
 }
+
+
+
+model File {
+  id  String @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  fileName String @map("file_name")
+  originalName String @map("original_name")
+  size Int
+  mimetype String
+
+  @@map("file")
+}
+
