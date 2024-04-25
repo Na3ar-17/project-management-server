@@ -8,7 +8,14 @@ import { StatisticsModule } from './statistics/statistics.module';
 import { FilesModule } from './files/files.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), UserModule, AuthModule, ProjectModule, StatisticsModule, FilesModule],
+  imports: [
+    ConfigModule.forRoot(),
+    UserModule,
+    AuthModule,
+    ProjectModule,
+    StatisticsModule,
+    FilesModule,
+  ],
   controllers: [],
   providers: [PrismaService],
 })

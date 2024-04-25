@@ -62,7 +62,6 @@ export class UserService {
         id,
       },
       data,
-
       select: {
         fullName: true,
         companyName: true,
