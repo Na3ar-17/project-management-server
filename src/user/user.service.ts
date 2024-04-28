@@ -42,7 +42,7 @@ export class UserService {
       data: {
         email: dto.email,
         fullName: dto.fullName,
-        companyName: dto.companyName,
+        companyName: dto.companyName || '',
         password: await hash(dto.password),
         imgLink: '',
       },
@@ -54,7 +54,12 @@ export class UserService {
   async update(id: string, dto: UpdateUserDto) {
     let data = dto;
     if (dto.password) {
-      data = { ...dto, password: await hash(dto.password) };
+      data = {
+        ...dto,
+        password: await hash(dto.password),
+        companyName: '',
+        imgLink: '',
+      };
     }
 
     const user = await this.prisma.user.update({
@@ -71,5 +76,19 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async delete(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return this.prisma.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
   }
 }

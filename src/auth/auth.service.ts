@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { verify } from 'argon2';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { Response } from 'express';
+import { Response, response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -35,10 +35,7 @@ export class AuthService {
   async register(dto: CreateUserDto) {
     const oldUser = await this.userService.getByEmail(dto.email);
 
-    if (oldUser)
-      throw new BadRequestException(
-        `User with email: ${dto.email} already exists`,
-      );
+    if (oldUser) throw new BadRequestException(`Invalid email or password`);
 
     const { password, ...user } = await this.userService.create(dto);
 
@@ -82,8 +79,9 @@ export class AuthService {
   private async validate(dto: CreateAuthDto) {
     const user = await this.userService.getByEmail(dto.email);
 
-    if (!user)
-      throw new NotFoundException(`User with email: ${dto.email} not found`);
+    if (!user) {
+      throw new NotFoundException(`Invalid email or password`);
+    }
 
     const isValid = await verify(user.password, dto.password);
 

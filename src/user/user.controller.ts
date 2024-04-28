@@ -40,4 +40,10 @@ export class UserController {
   ) {
     return this.userService.update(id, dto);
   }
+
+  @Delete()
+  @Auth()
+  async delete(@CurrentUser('id') id: string) {
+    return this.userService.delete(id);
+  }
 }
