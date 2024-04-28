@@ -8,6 +8,8 @@ import {
   HttpStatus,
   ParseFilePipe,
   FileTypeValidator,
+  Delete,
+  Body,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -35,5 +37,12 @@ export class FilesController {
     image: Express.Multer.File,
   ) {
     return this.filesService.uploadImage(image);
+  }
+
+  @Delete('delete')
+  @Auth()
+  async deleteImage(@Body() data: { imageName: string }) {
+    const { imageName } = data;
+    return await this.filesService.deleteImage(imageName);
   }
 }

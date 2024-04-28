@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "types": ["file-type"],
     "module": "CommonJS",
     "declaration": true,
     "removeComments": true,

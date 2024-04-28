@@ -49,7 +49,7 @@ export class ProjectService {
     const project = await this.prisma.project.create({
       data: {
         name: projectName,
-        end: '00-00-00',
+        end: '00.00.00',
         image: '',
         slug: slug,
         user: {
