@@ -38,7 +38,7 @@ export class ProjectService {
         userId,
       },
       orderBy: {
-        createdAt: 'asc',
+        createdAt: 'desc',
       },
     });
   }

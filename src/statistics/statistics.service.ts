@@ -29,7 +29,11 @@ export class StatisticsService {
   async create(projectId: string) {
     return await this.prisma.statistics.create({
       data: {
-        projectId,
+        project: {
+          connect: {
+            id: projectId,
+          },
+        },
       },
     });
   }

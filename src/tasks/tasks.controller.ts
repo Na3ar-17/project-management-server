@@ -21,4 +21,9 @@ export class TasksController {
   async getAll(@Param('projectId') projectId: string) {
     return await this.tasksService.getAll(projectId);
   }
+  @Post('/:projectId')
+  @Auth()
+  async create(@Param('projectId') projectId: string) {
+    return await this.tasksService.create(projectId);
+  }
 }
