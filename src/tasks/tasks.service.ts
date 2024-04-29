@@ -56,5 +56,18 @@ export class TasksService {
     return newTask;
   }
 
-  async delete(projectId: string, id: string) {}
+  async delete(projectId: string, id: string) {
+    const task = await this.getOneById(projectId, id);
+
+    const deleted = await this.prisma.task.delete({
+      where: {
+        id: task.id,
+        projectId: task.projectId,
+      },
+    });
+
+    return { task: deleted, message: 'Successfully deleted' };
+  }
+
+  async update(dto: UpdateTaskDto) {}
 }

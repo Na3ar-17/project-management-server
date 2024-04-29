@@ -21,9 +21,15 @@ export class TasksController {
   async getAll(@Param('projectId') projectId: string) {
     return await this.tasksService.getAll(projectId);
   }
+
   @Post('/:projectId')
   @Auth()
   async create(@Param('projectId') projectId: string) {
     return await this.tasksService.create(projectId);
+  }
+  @Delete('/:projectId/:id')
+  @Auth()
+  async delete(@Param('projectId') projectId: string, @Param('id') id: string) {
+    return await this.tasksService.delete(projectId, id);
   }
 }
