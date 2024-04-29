@@ -39,6 +39,7 @@ model Project {
   userId String @map("user_id")
 
   tatistics Statistics?
+  tasks Task[]
 
   @@map("projects")
 }
@@ -61,5 +62,30 @@ model Statistics {
 }
 
 
+model Task {
+  id  String @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  title String
+  prioryty EnumTaskPriority @default(low)
+  dueDate DateTime @default(now()) @map("due_date")
+  descripton String?
+  status EnumTaskStatus @default(inQueue)
 
+  project Project? @relation(fields: [projectId], references: [id])
+  projectId String
+  @@map("task")
+}
 
+enum EnumTaskPriority {
+  low 
+  normal 
+  high 
+}
+
+enum EnumTaskStatus {
+  inQueue 
+  onProgress 
+  testing 
+  completed 
+}

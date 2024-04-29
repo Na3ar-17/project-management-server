@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ProjectModule } from './project/project.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { FilesModule } from './files/files.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FilesModule } from './files/files.module';
     ProjectModule,
     StatisticsModule,
     FilesModule,
+    TasksModule,
   ],
   controllers: [],
   providers: [PrismaService],
