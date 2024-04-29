@@ -6,6 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -33,5 +36,15 @@ export class ProjectController {
   @Auth()
   async delete(@CurrentUser('id') userId: string, @Param('id') id: string) {
     return await this.projectService.delete(userId, id);
+  }
+
+  @Put('update')
+  @UsePipes(new ValidationPipe())
+  @Auth()
+  async update(
+    @Body() dto: UpdateProjectDto,
+    @CurrentUser('id') userId: string,
+  ) {
+    return await this.projectService.update(dto, userId);
   }
 }

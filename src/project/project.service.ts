@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -33,6 +37,9 @@ export class ProjectService {
       where: {
         userId,
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
   }
 
@@ -49,7 +56,7 @@ export class ProjectService {
     const project = await this.prisma.project.create({
       data: {
         name: projectName,
-        end: '00.00.00',
+        end: '',
         image: '',
         slug: slug,
         user: {
@@ -80,5 +87,40 @@ export class ProjectService {
     return {
       message: 'Successfully deleted',
     };
+  }
+
+  async update(dto: UpdateProjectDto, userId: string) {
+    const project = await this.getById(userId, dto.id);
+    //TODO validate if the name has
+
+    if (dto.name && dto.name !== project.name) {
+      const existingProjects = await this.prisma.project.findMany({
+        where: {
+          userId,
+          name: dto.name,
+          id: {
+            not: dto.id,
+          },
+        },
+      });
+
+      if (existingProjects.length > 0) {
+        throw new BadRequestException('Project name must be unique');
+      }
+    }
+
+    const updated = await this.prisma.project.update({
+      where: {
+        id: project.id,
+      },
+      data: {
+        image: dto.image,
+        name: dto.name || project.name,
+        end: dto.end || project.end,
+        slug: slugify(dto.name) || project.slug,
+      },
+    });
+
+    return updated;
   }
 }

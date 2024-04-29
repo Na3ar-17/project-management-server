@@ -26,6 +26,8 @@ export class StatisticsService {
     return statistics;
   }
 
+  async getByProjectIdAndSlug(projectId: string, slug: string) {}
+
   async create(projectId: string) {
     return await this.prisma.statistics.create({
       data: {
