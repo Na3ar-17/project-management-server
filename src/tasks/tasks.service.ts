@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -69,5 +68,23 @@ export class TasksService {
     return { task: deleted, message: 'Successfully deleted' };
   }
 
-  async update(dto: UpdateTaskDto) {}
+  async update(dto: UpdateTaskDto) {
+    const task = await this.getOneById(dto.projectId, dto.id);
+
+    const updated = await this.prisma.task.update({
+      where: {
+        id: dto.id,
+        projectId: dto.projectId,
+      },
+      data: {
+        title: dto.title || task.title,
+        descripton: dto.descripton || task.descripton,
+        status: dto.status || task.status,
+        prioryty: dto.prioryty || task.prioryty,
+        dueDate: dto.dueDate || task.dueDate,
+      },
+    });
+
+    return updated;
+  }
 }

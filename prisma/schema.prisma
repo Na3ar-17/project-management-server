@@ -68,7 +68,7 @@ model Task {
   updatedAt DateTime @updatedAt @map("updated_at")
   title String
   prioryty EnumTaskPriority @default(low)
-  dueDate DateTime @default(now()) @map("due_date")
+  dueDate String @map("due_date")
   descripton String?
   status EnumTaskStatus @default(inQueue)
 

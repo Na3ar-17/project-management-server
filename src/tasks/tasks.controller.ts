@@ -6,9 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 
@@ -31,5 +33,12 @@ export class TasksController {
   @Auth()
   async delete(@Param('projectId') projectId: string, @Param('id') id: string) {
     return await this.tasksService.delete(projectId, id);
+  }
+
+  @Put('/update')
+  @Auth()
+  @UsePipes(new ValidationPipe())
+  async update(@Body() dto: UpdateTaskDto) {
+    return await this.tasksService.update(dto);
   }
 }
