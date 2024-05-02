@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { SubTaskService } from './sub_task.service';
 import { CreateSubTaskDto } from './dto/create-sub_task.dto';
@@ -23,10 +25,11 @@ export class SubTaskController {
     return await this.subTaskService.getAll(taskId);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('create/:taskId')
   @Auth()
-  async create(@Param('taskId') taskId: string) {
-    return await this.subTaskService.create(taskId);
+  async create(@Param('taskId') taskId: string, @Body() dto: CreateSubTaskDto) {
+    return await this.subTaskService.create(taskId, dto);
   }
 
   @Delete('delete/:taskId/:id')

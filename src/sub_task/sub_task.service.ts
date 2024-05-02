@@ -28,15 +28,15 @@ export class SubTaskService {
         taskId,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: 'asc',
       },
     });
   }
 
-  async create(taskId: string) {
+  async create(taskId: string, dto: CreateSubTaskDto) {
     const newSubTask = await this.prisma.subTask.create({
       data: {
-        title: '',
+        title: dto.title,
         task: {
           connect: {
             id: taskId,
