@@ -11,13 +11,13 @@ export class UpdateTaskDto {
 
   @IsString()
   @MinLength(2, { message: 'The title must contains at least 2 characters' })
-  @MaxLength(25, { message: 'The title is too long' })
+  @MaxLength(35, { message: 'The title is too long' })
   @IsOptional()
   title?: string;
 
   @IsString()
   @IsOptional()
-  prioryty?: EnumTaskPriority;
+  priority?: EnumTaskPriority;
 
   @IsString()
   @IsOptional()
@@ -29,5 +29,5 @@ export class UpdateTaskDto {
 
   @IsString()
   @IsOptional()
-  descripton?: string;
+  description?: string;
 }

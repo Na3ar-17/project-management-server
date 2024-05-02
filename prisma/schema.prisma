@@ -35,7 +35,7 @@ model Project {
   image String?
   end String?
 
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
   tatistics Statistics?
@@ -47,7 +47,7 @@ model Project {
 
 model Statistics {
   projectId String @map("project_id") @id
-  project Project? @relation(fields: [projectId], references: [id])
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   tasksCompleted Int @default(0) @map("tasks_completed")
   tasksCreated Int @default(0) @map("tasks_created")
@@ -67,14 +67,31 @@ model Task {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   title String
-  prioryty EnumTaskPriority @default(low)
+  priority EnumTaskPriority @default(low)
   dueDate String @map("due_date")
-  descripton String?
+  description String?
   status EnumTaskStatus @default(inQueue)
 
-  project Project? @relation(fields: [projectId], references: [id])
+
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
-  @@map("task")
+
+  subTasks subTask[]
+  @@map("tasks")
+}
+
+model subTask {
+  id  String @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  title String
+  isCompleted Boolean @default(false) @map("is_completed")
+
+  task Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId String
+
+  @@map("sub_tasks")
 }
 
 enum EnumTaskPriority {

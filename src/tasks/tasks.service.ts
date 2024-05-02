@@ -12,7 +12,7 @@ export class TasksService {
         projectId,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: 'asc',
       },
     });
   }
@@ -40,10 +40,10 @@ export class TasksService {
     const newTask = await this.prisma.task.create({
       data: {
         title: title,
-        descripton: '',
-        prioryty: 'low',
+        description: '',
+        priority: 'low',
         status: 'inQueue',
-        dueDate: new Date().toISOString(),
+        dueDate: '--.--.--',
         project: {
           connect: {
             id: projectId,
@@ -78,9 +78,9 @@ export class TasksService {
       },
       data: {
         title: dto.title || task.title,
-        descripton: dto.descripton || task.descripton,
+        description: dto.description || task.description,
         status: dto.status || task.status,
-        prioryty: dto.prioryty || task.prioryty,
+        priority: dto.priority || task.priority,
         dueDate: dto.dueDate || task.dueDate,
       },
     });

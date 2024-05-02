@@ -24,6 +24,15 @@ export class TasksController {
     return await this.tasksService.getAll(projectId);
   }
 
+  @Get('/get-one/:projectId/:id')
+  @Auth()
+  async getOneById(
+    @Param('projectId') projectId: string,
+    @Param('id') id: string,
+  ) {
+    return await this.tasksService.getOneById(projectId, id);
+  }
+
   @Post('/:projectId')
   @Auth()
   async create(@Param('projectId') projectId: string) {
