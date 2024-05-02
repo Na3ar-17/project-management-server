@@ -1,4 +1,18 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateSubTaskDto } from './create-sub_task.dto';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UpdateSubTaskDto extends PartialType(CreateSubTaskDto) {}
+export class UpdateSubTaskDto {
+  @IsString()
+  id: string;
+
+  @IsString()
+  taskId: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(30, { message: 'Title is too long' })
+  title?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isCompleted?: boolean;
+}

@@ -60,4 +60,20 @@ export class SubTaskService {
 
     return { deleted, message: 'Successfully deleted' };
   }
+
+  async update(dto: UpdateSubTaskDto) {
+    const subTask = await this.getOneById(dto.taskId, dto.id);
+
+    const updated = await this.prisma.subTask.update({
+      where: {
+        id: subTask.id,
+        taskId: subTask.taskId,
+      },
+      data: {
+        title: dto.title || subTask.title,
+        isCompleted: dto.isCompleted || subTask.isCompleted,
+      },
+    });
+    return updated;
+  }
 }

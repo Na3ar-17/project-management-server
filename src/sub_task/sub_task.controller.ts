@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { SubTaskService } from './sub_task.service';
 import { CreateSubTaskDto } from './dto/create-sub_task.dto';
@@ -32,5 +33,11 @@ export class SubTaskController {
   @Auth()
   async delete(@Param('taskId') taskId: string, @Param('id') id: string) {
     return await this.subTaskService.delete(taskId, id);
+  }
+
+  @Put('update')
+  @Auth()
+  async update(@Body() dto: UpdateSubTaskDto) {
+    return await this.subTaskService.update(dto);
   }
 }
