@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class NotificationsService {
@@ -11,6 +11,20 @@ export class NotificationsService {
     return await this.prisma.notification.findMany({
       where: {
         recipientId: userId,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+      include: {
+        owner: {
+          select: {
+            email: true,
+            fullName: true,
+            id: true,
+            imgLink: true,
+            projects: true,
+          },
+        },
       },
     });
   }

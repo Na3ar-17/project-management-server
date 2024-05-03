@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
@@ -25,8 +27,9 @@ export class NotificationsController {
 
   @Post('/invitation')
   @Auth()
+  @UsePipes(new ValidationPipe())
   async createInvitation(
-    dto: CreateNotificationDto,
+    @Body() dto: CreateNotificationDto,
     @CurrentUser('id') id: string,
   ) {
     return await this.notificationsService.createInvitation(dto, id);
