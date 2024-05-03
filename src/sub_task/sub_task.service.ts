@@ -71,7 +71,7 @@ export class SubTaskService {
       },
       data: {
         title: dto.title || subTask.title,
-        isCompleted: dto.isCompleted || subTask.isCompleted,
+        isCompleted: dto.isCompleted,
       },
     });
     return updated;
