@@ -15,14 +15,14 @@ export class NotificationsService {
     });
   }
 
-  async createInvitation(dto: CreateNotificationDto) {
+  async createInvitation(dto: CreateNotificationDto, ownerId: string) {
     const newNotification = await this.prisma.notification.create({
       data: {
         content: dto.content,
         type: 'Invitation',
         owner: {
           connect: {
-            id: dto.ownerId,
+            id: ownerId,
           },
         },
         recipient: {
@@ -32,5 +32,7 @@ export class NotificationsService {
         },
       },
     });
+
+    return newNotification;
   }
 }

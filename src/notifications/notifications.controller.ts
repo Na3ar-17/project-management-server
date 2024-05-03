@@ -22,4 +22,13 @@ export class NotificationsController {
   async getAll(@CurrentUser('id') id: string) {
     return await this.notificationsService.getAll(id);
   }
+
+  @Post('/invitation')
+  @Auth()
+  async createInvitation(
+    dto: CreateNotificationDto,
+    @CurrentUser('id') id: string,
+  ) {
+    return await this.notificationsService.createInvitation(dto, id);
+  }
 }

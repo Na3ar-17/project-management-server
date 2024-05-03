@@ -70,7 +70,7 @@ model Notification {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   content     String
-  type        EnumNotificationType
+  type        EnumNotificationType @default(Invitation)
   recipient   User      @relation("Recipient", fields: [recipientId], references: [id])
   recipientId String    @map("recipient_id")
   owner       User      @relation("Owner", fields: [ownerId], references: [id])
