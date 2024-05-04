@@ -34,4 +34,11 @@ export class NotificationsController {
   ) {
     return await this.notificationsService.createInvitation(dto, id);
   }
+
+  @Delete('/delete/:id')
+  @Auth()
+  @UsePipes(new ValidationPipe())
+  async delete(@Param('id') id: string, @CurrentUser('id') userId: string) {
+    return await this.notificationsService.delete(userId, id);
+  }
 }
