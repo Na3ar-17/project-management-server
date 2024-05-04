@@ -19,7 +19,7 @@ model User {
   companyName String?
   password String
 
-  projects Project[]
+  projects Project[] 
   notificationsSent   Notification[] @relation("Owner")
   notificationsReceived   Notification[] @relation("Recipient")
   members  Member[]
@@ -38,12 +38,13 @@ model Project {
   image String?
   end String?
 
-  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User?        @relation( fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
   statistics Statistics?
   tasks Task[]
 
+  ownerId     String?        @map("owner_id")
   members     Member[]
 
   @@map("projects")
