@@ -6,4 +6,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class MembersService {
   constructor(private prisma: PrismaService) {}
+
+  async getAll(projectId: string) {
+    return await this.prisma.member.findMany({
+      where: {
+        projectId,
+      },
+    });
+  }
 }
