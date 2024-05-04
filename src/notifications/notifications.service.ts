@@ -18,6 +18,8 @@ export class NotificationsService {
     if (!notification) {
       throw new NotFoundException('Not found');
     }
+
+    return notification;
   }
 
   async getAll(userId: string) {
@@ -63,5 +65,19 @@ export class NotificationsService {
     return newNotification;
   }
 
-  async delete(userId: string, id: string) {}
+  async delete(userId: string, id: string) {
+    const notification = await this.getById(userId, id);
+
+    const deleted = await this.prisma.notification.delete({
+      where: {
+        id: notification.id,
+        recipientId: notification.recipientId,
+      },
+    });
+
+    return {
+      deleted,
+      message: 'Successfully deleted',
+    };
+  }
 }
