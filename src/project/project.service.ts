@@ -59,6 +59,7 @@ export class ProjectService {
         end: '',
         image: '',
         slug: slug,
+        ownerId: userId,
         user: {
           connect: {
             id: userId,
