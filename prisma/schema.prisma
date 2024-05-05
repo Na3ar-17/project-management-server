@@ -60,7 +60,7 @@ model Member {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String    @map("user_id")
 
-  project   Project   @relation(fields: [projectId], references: [id], onDelete: NoAction)
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String    @map("project_id")
   @@map("members")
 }
