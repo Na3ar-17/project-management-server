@@ -89,4 +89,22 @@ export class UserService {
       },
     });
   }
+
+  async searchByEmail(email: string) {
+    const users = await this.prisma.user.findMany({
+      where: {
+        email: {
+          contains: email,
+        },
+      },
+      select: {
+        fullName: true,
+        email: true,
+        imgLink: true,
+        id: true,
+      },
+    });
+
+    return users;
+  }
 }

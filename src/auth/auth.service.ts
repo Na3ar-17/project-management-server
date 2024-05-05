@@ -11,6 +11,7 @@ import { UserService } from 'src/user/user.service';
 import { verify } from 'argon2';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Response, response } from 'express';
+import { format } from 'date-fns';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +67,7 @@ export class AuthService {
     const data = { id: userId };
 
     const accessToken = this.jwt.sign(data, {
-      expiresIn: '1h',
+      expiresIn: '1d',
     });
 
     const refreshToken = this.jwt.sign(data, {

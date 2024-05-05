@@ -46,4 +46,10 @@ export class UserController {
   async delete(@CurrentUser('id') id: string) {
     return this.userService.delete(id);
   }
+
+  @Auth()
+  @Post('/search')
+  async searchByEmail(@Body() data: { email: string }) {
+    return await this.userService.searchByEmail(data.email);
+  }
 }
