@@ -76,6 +76,8 @@ model Notification {
   recipientId String    @map("recipient_id")
   owner       User      @relation("Owner", fields: [ownerId], references: [id])
   ownerId     String    @map("owner_id")
+  projectId String?
+
 
   @@map("notifications")
 }
