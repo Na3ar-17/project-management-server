@@ -91,10 +91,14 @@ export class UserService {
   }
 
   async searchByEmail(email: string, currentuserId: string) {
+    if (!email.trim()) {
+      return [];
+    }
+
     const users = await this.prisma.user.findMany({
       where: {
         email: {
-          contains: email,
+          contains: email.toLowerCase(),
         },
         id: {
           not: currentuserId,
