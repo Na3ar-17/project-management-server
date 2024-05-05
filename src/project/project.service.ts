@@ -35,7 +35,18 @@ export class ProjectService {
   async getAll(userId: string) {
     return await this.prisma.project.findMany({
       where: {
-        userId,
+        OR: [
+          {
+            userId,
+          },
+          {
+            members: {
+              some: {
+                userId,
+              },
+            },
+          },
+        ],
       },
       orderBy: {
         createdAt: 'desc',

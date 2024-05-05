@@ -16,6 +16,12 @@ export class MembersService {
       where: {
         projectId,
       },
+      select: {
+        id: true,
+        role: true,
+        userId: true,
+        user: true,
+      },
     });
   }
 
