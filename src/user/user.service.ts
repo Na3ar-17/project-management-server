@@ -90,11 +90,14 @@ export class UserService {
     });
   }
 
-  async searchByEmail(email: string) {
+  async searchByEmail(email: string, currentuserId: string) {
     const users = await this.prisma.user.findMany({
       where: {
         email: {
           contains: email,
+        },
+        id: {
+          not: currentuserId,
         },
       },
       select: {

@@ -49,7 +49,10 @@ export class UserController {
 
   @Auth()
   @Post('/search')
-  async searchByEmail(@Body() data: { email: string }) {
-    return await this.userService.searchByEmail(data.email);
+  async searchByEmail(
+    @Body() data: { email: string },
+    @CurrentUser('id') userId: string,
+  ) {
+    return await this.userService.searchByEmail(data.email, userId);
   }
 }
