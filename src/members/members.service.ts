@@ -42,6 +42,14 @@ export class MembersService {
           },
         },
       },
+      select: {
+        project: {
+          select: {
+            slug: true,
+            id: true,
+          },
+        },
+      },
     });
 
     return newMember;
