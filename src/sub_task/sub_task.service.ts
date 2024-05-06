@@ -23,7 +23,7 @@ export class SubTaskService {
   }
 
   async getAll(taskId: string) {
-    return await this.prisma.subTask.findMany({
+    const subtasks = await this.prisma.subTask.findMany({
       where: {
         taskId,
       },
@@ -31,6 +31,8 @@ export class SubTaskService {
         createdAt: 'asc',
       },
     });
+
+    return subtasks;
   }
 
   async create(taskId: string, dto: CreateSubTaskDto) {
@@ -66,8 +68,8 @@ export class SubTaskService {
 
     const updated = await this.prisma.subTask.update({
       where: {
-        id: subTask.id,
-        taskId: subTask.taskId,
+        id: dto.id,
+        taskId: dto.taskId,
       },
       data: {
         title: dto.title || subTask.title,

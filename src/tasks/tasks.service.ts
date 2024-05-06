@@ -7,14 +7,33 @@ export class TasksService {
   constructor(private prisma: PrismaService) {}
 
   async getAll(projectId: string) {
-    return await this.prisma.task.findMany({
+    const tasks = await this.prisma.task.findMany({
       where: {
         projectId,
       },
       orderBy: {
         createdAt: 'asc',
       },
+      include: {
+        subTasks: true,
+      },
     });
+
+    const tasksWithProgress = await tasks.map((task) => {
+      const totalSubtasks = task.subTasks.length;
+      const completedSubtasks = task.subTasks.filter(
+        (subtask) => subtask.isCompleted,
+      ).length;
+      const progressPercent =
+        totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0;
+
+      return {
+        ...task,
+        progressPercent,
+      };
+    });
+
+    return tasksWithProgress;
   }
 
   async getOneById(projectId: string, id: string) {

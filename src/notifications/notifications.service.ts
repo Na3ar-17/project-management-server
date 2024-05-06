@@ -24,14 +24,16 @@ export class NotificationsService {
   }
 
   async see(userId: string) {
-    return await this.prisma.notification.updateMany({
+    const updated = await this.prisma.notification.updateMany({
       where: {
-        recipientId: userId,
+        projectId: userId,
       },
       data: {
-        hasSeen: false,
+        hasSeen: true,
       },
     });
+
+    return updated;
   }
 
   async getAll(userId: string) {
