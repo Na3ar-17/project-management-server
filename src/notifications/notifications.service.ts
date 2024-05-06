@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
+import { RejectNotificationDto } from './dto/reject-notification.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -66,23 +67,23 @@ export class NotificationsService {
     return newNotification;
   }
 
-  async rejectInvitation(recipientId: string, ownerId: string, id: string) {
-    const notification = await this.getById(recipientId, id);
+  async rejectInvitation(dto: RejectNotificationDto) {
+    const notification = await this.getById(dto.recipientId, dto.id);
 
-    await this.delete(recipientId, id);
+    await this.delete(dto.recipientId, dto.id);
 
     const rejected = await this.prisma.notification.create({
       data: {
         recipient: {
           connect: {
-            id: recipientId,
+            id: dto.ownerId,
           },
         },
         type: 'RejectInvitation',
         content: 'Your invitation has rejected',
         owner: {
           connect: {
-            id: recipientId,
+            id: dto.recipientId,
           },
         },
       },
