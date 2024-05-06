@@ -25,6 +25,11 @@ export class NotificationsController {
   async getAll(@CurrentUser('id') id: string) {
     return await this.notificationsService.getAll(id);
   }
+  @Post('/see')
+  @Auth()
+  async see(@CurrentUser('id') id: string) {
+    return await this.notificationsService.see(id);
+  }
 
   @Post('/invitation')
   @Auth()

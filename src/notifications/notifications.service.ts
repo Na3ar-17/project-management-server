@@ -23,6 +23,17 @@ export class NotificationsService {
     return notification;
   }
 
+  async see(userId: string) {
+    return await this.prisma.notification.updateMany({
+      where: {
+        recipientId: userId,
+      },
+      data: {
+        hasSeen: false,
+      },
+    });
+  }
+
   async getAll(userId: string) {
     return await this.prisma.notification.findMany({
       where: {
