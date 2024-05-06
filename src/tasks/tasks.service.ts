@@ -62,7 +62,7 @@ export class TasksService {
         description: '',
         priority: 'low',
         status: 'inQueue',
-        dueDate: '--.--.--',
+        dueDate: '',
         project: {
           connect: {
             id: projectId,
