@@ -10,4 +10,8 @@ export class CreateNotificationDto {
 
   @IsString()
   recipientId: string;
+
+  @IsString()
+  @IsOptional()
+  projectId?: string;
 }

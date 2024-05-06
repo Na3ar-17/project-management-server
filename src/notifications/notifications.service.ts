@@ -49,6 +49,7 @@ export class NotificationsService {
       data: {
         content: dto.content,
         type: 'Invitation',
+        projectId: dto.projectId,
         owner: {
           connect: {
             id: ownerId,
@@ -63,6 +64,31 @@ export class NotificationsService {
     });
 
     return newNotification;
+  }
+
+  async rejectInvitation(recipientId: string, ownerId: string, id: string) {
+    const notification = await this.getById(recipientId, id);
+
+    await this.delete(recipientId, id);
+
+    const rejected = await this.prisma.notification.create({
+      data: {
+        recipient: {
+          connect: {
+            id: recipientId,
+          },
+        },
+        type: 'RejectInvitation',
+        content: 'Your invitation has rejected',
+        owner: {
+          connect: {
+            id: recipientId,
+          },
+        },
+      },
+    });
+
+    return rejected;
   }
 
   async delete(userId: string, id: string) {

@@ -158,6 +158,7 @@ enum EnumMemberStatus {
 
 enum EnumNotificationType {
   Invitation
+  RejectInvitation
   TaskAssignment
   DeadlineReminder
 }
