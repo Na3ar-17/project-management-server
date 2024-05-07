@@ -24,11 +24,12 @@ export class MembersController {
   }
 
   @Auth()
-  @Post('/add-new/:projectId')
+  @Post('/add-new/:projectId/:ownerId')
   async addMember(
     @CurrentUser('id') userId: string,
     @Param('projectId') projectId: string,
+    @Param('ownerId') ownerId: string,
   ) {
-    return await this.membersService.addMember(userId, projectId);
+    return await this.membersService.addMember(userId, projectId, ownerId);
   }
 }

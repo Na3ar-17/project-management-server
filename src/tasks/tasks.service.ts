@@ -97,7 +97,7 @@ export class TasksService {
       },
       data: {
         title: dto.title || task.title,
-        description: dto.description || task.description,
+        description: dto.description,
         status: dto.status || task.status,
         priority: dto.priority || task.priority,
         dueDate: dto.dueDate || task.dueDate,
