@@ -20,7 +20,21 @@ export class ProjectService {
     const project = await this.prisma.project.findUnique({
       where: {
         id,
-        userId,
+        OR: [
+          {
+            id,
+            userId,
+          },
+
+          {
+            id,
+            members: {
+              some: {
+                userId,
+              },
+            },
+          },
+        ],
       },
     });
 
