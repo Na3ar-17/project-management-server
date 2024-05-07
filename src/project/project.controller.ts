@@ -26,6 +26,12 @@ export class ProjectController {
     return await this.projectService.getAll(userId);
   }
 
+  @Get('/get-one/:id')
+  @Auth()
+  async getById(@CurrentUser('id') userId: string, @Param('id') id: string) {
+    return await this.projectService.getById(userId, id);
+  }
+
   @Post('/create')
   @Auth()
   async create(@CurrentUser('id') userId: string) {
