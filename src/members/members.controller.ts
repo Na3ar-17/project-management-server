@@ -32,4 +32,10 @@ export class MembersController {
   ) {
     return await this.membersService.addMember(userId, projectId, ownerId);
   }
+
+  @Auth()
+  @Delete('/kick/:projectId/:id')
+  async kick(@Param('projectId') projectId: string, @Param('id') id: string) {
+    return await this.membersService.kick(id, projectId);
+  }
 }
