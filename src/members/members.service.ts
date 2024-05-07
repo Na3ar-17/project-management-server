@@ -91,7 +91,19 @@ export class MembersService {
     }
   }
 
-  async cick(userId: string, projectId: string) {
-    // const member = await this.
+  async kick(id: string, projectId: string) {
+    const member = await this.getOneById(id, projectId);
+
+    const kicked = await this.prisma.member.delete({
+      where: {
+        id: member.id,
+        projectId: member.projectId,
+      },
+    });
+
+    return {
+      kicked,
+      message: 'Successfully deleted',
+    };
   }
 }
