@@ -97,9 +97,13 @@ export class UserService {
         email: {
           contains: email.toLowerCase(),
         },
-        id: {
-          not: currentuserId,
-        },
+        OR: [
+          {
+            id: {
+              not: currentuserId,
+            },
+          },
+        ],
       },
       select: {
         fullName: true,

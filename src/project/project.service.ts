@@ -22,12 +22,10 @@ export class ProjectService {
         id,
         OR: [
           {
-            id,
             userId,
           },
 
           {
-            id,
             members: {
               some: {
                 userId,
