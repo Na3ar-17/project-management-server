@@ -16,30 +16,6 @@ export class ProjectService {
     private statisticsService: StatisticsService,
   ) {}
 
-  async isUserAuthorizedForProject(
-    userId: string,
-    projectId: string,
-  ): Promise<boolean> {
-    const project = await this.prisma.project.findFirst({
-      where: {
-        id: projectId,
-        OR: [
-          {
-            userId,
-          },
-          {
-            members: {
-              some: {
-                userId,
-              },
-            },
-          },
-        ],
-      },
-    });
-    return !!project;
-  }
-
   async getById(userId: string, id: string) {
     const project = await this.prisma.project.findUnique({
       where: {
