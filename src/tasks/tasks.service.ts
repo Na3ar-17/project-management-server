@@ -1,10 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class TasksService {
   constructor(private prisma: PrismaService) {}
+
+  async use(req: Request, res: Response, next: NextFunction) {
+    const projectId = req.params.projectId;
+    // const userId = req.user.id;
+  }
 
   async getAll(projectId: string) {
     const tasks = await this.prisma.task.findMany({
@@ -112,3 +118,5 @@ export class TasksService {
     return updated;
   }
 }
+
+export const ProjectTasksPage = ({ projectId }: { projectId: string }) => {};
