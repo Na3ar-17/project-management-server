@@ -110,7 +110,7 @@ model Task {
   dueDate String @map("due_date")
   description String?
   status EnumTaskStatus @default(inQueue)
-
+  createdBy String?
 
   project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
