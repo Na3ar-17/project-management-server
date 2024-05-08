@@ -9,7 +9,6 @@ import { FilesModule } from './files/files.module';
 import { TasksModule } from './tasks/tasks.module';
 import { SubTaskModule } from './sub_task/sub_task.module';
 import { NotificationsModule } from './notifications/notifications.module';
-import { MembersModule } from './members/members.module';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { MembersModule } from './members/members.module';
     TasksModule,
     SubTaskModule,
     NotificationsModule,
-    MembersModule,
   ],
   controllers: [],
   providers: [PrismaService],

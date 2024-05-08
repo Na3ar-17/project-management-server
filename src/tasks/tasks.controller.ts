@@ -13,7 +13,6 @@ import {
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
-import { CurrentMember } from 'src/members/decorators/member.decorator';
 
 @Controller('tasks')
 export class TasksController {
