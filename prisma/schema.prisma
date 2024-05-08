@@ -7,92 +7,88 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id  String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  fullName String
-  email String @unique
-  imgLink String?
+  fullName    String
+  email       String  @unique
+  imgLink     String?
   companyName String?
-  password String
+  password    String
 
-  projects Project[] 
-  notificationsSent   Notification[] @relation("Owner")
-  notificationsReceived   Notification[] @relation("Recipient")
-  members  Member[]
+  projects              Project[]
+  notificationsSent     Notification[] @relation("Owner")
+  notificationsReceived Notification[] @relation("Recipient")
+  members               Member[]
 
   @@map("users")
 }
 
-
 model Project {
-  id  String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  name String 
-  slug String? 
+  name  String
+  slug  String?
   image String?
-  end String?
+  end   String?
 
-  user        User?        @relation( fields: [userId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
   statistics Statistics?
-  tasks Task[]
+  tasks      Task[]
 
-  ownerId     String?        @map("owner_id")
-  members     Member[]
+  ownerId String?  @map("owner_id")
+  members Member[]
 
   @@map("projects")
 }
 
 model Member {
-  id  String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   role EnumMemberRole @default(Member)
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String    @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
-  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId String    @map("project_id")
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String  @map("project_id")
+  Task      Task[]
+
   @@map("members")
 }
 
-
 model Notification {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id          String               @id @default(cuid())
+  createdAt   DateTime             @default(now()) @map("created_at")
+  updatedAt   DateTime             @updatedAt @map("updated_at")
   content     String
   type        EnumNotificationType @default(Invitation)
-  recipient   User      @relation("Recipient", fields: [recipientId], references: [id])
-  recipientId String    @map("recipient_id")
-  owner       User      @relation("Owner", fields: [ownerId], references: [id])
-  ownerId     String    @map("owner_id")
-  projectId String?
-  hasSeen Boolean @default(false)
-
+  recipient   User                 @relation("Recipient", fields: [recipientId], references: [id])
+  recipientId String               @map("recipient_id")
+  owner       User                 @relation("Owner", fields: [ownerId], references: [id])
+  ownerId     String               @map("owner_id")
+  projectId   String?
+  hasSeen     Boolean              @default(false)
 
   @@map("notifications")
 }
 
-
 model Statistics {
-  projectId String @map("project_id") @id
-  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String   @id @map("project_id")
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   tasksCompleted Int @default(0) @map("tasks_completed")
-  tasksCreated Int @default(0) @map("tasks_created")
-  tasksDeleted Int @default(0) @map("tasks_deleted")
-  members Int @default(0)
-
+  tasksCreated   Int @default(0) @map("tasks_created")
+  tasksDeleted   Int @default(0) @map("tasks_deleted")
+  members        Int @default(0)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -100,50 +96,52 @@ model Statistics {
   @@map("statistics")
 }
 
-
 model Task {
-  id  String @id @default(cuid())
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  title String
-  priority EnumTaskPriority @default(low)
-  dueDate String @map("due_date")
+  id          String           @id @default(cuid())
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  title       String
+  priority    EnumTaskPriority @default(low)
+  dueDate     String           @map("due_date")
   description String?
-  status EnumTaskStatus @default(inQueue)
-  createdBy String?
+  status      EnumTaskStatus   @default(inQueue)
 
-  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy Member? @relation(fields: [memberId], references: [id])
+
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
 
   subTasks subTask[]
+  memberId String?
+
   @@map("tasks")
 }
 
 model subTask {
-  id  String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  title String
+  title       String
   isCompleted Boolean @default(false) @map("is_completed")
 
-  task Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task   Task?  @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId String
 
   @@map("sub_tasks")
 }
 
 enum EnumTaskPriority {
-  low 
-  normal 
-  high 
+  low
+  normal
+  high
 }
 
 enum EnumTaskStatus {
-  inQueue 
-  onProgress 
-  testing 
-  completed 
+  inQueue
+  onProgress
+  testing
+  completed
 }
 
 enum EnumMemberRole {
