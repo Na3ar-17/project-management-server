@@ -87,7 +87,7 @@ export class UserService {
     });
   }
 
-  async searchByEmail(email: string, currentuserId: string) {
+  async searchByEmail(email: string, currentUserId: string) {
     if (!email.trim()) {
       return [];
     }
@@ -97,10 +97,11 @@ export class UserService {
         email: {
           contains: email.toLowerCase(),
         },
+
         OR: [
           {
             id: {
-              not: currentuserId,
+              not: currentUserId,
             },
           },
         ],

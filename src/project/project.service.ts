@@ -63,6 +63,9 @@ export class ProjectService {
       orderBy: {
         createdAt: 'desc',
       },
+      include: {
+        members: true,
+      },
     });
   }
 
