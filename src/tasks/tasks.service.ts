@@ -52,6 +52,9 @@ export class TasksService {
         id,
         projectId,
       },
+      include: {
+        subTasks: true,
+      },
     });
 
     if (!task) {
@@ -102,10 +105,17 @@ export class TasksService {
 
     isDateBefore({ createdAt: task.createdAt, deadLine: dto.dueDate });
 
-    if (dto.status === 'completed') {
-      this.statisticsService.updateTasksCompleted({
+    if (dto.status == 'completed') {
+      await this.statisticsService.updateTasksCompleted({
         projectId: task.projectId,
         type: 'increment',
+      });
+    }
+
+    if (dto.status !== 'completed') {
+      await this.statisticsService.updateTasksCompleted({
+        projectId: task.projectId,
+        type: 'decrement',
       });
     }
 

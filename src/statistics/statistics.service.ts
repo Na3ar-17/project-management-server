@@ -62,7 +62,9 @@ export class StatisticsService {
     const newData =
       type === 'increment'
         ? statistics.tasksCompleted + 1
-        : statistics.tasksCompleted - 1;
+        : statistics.tasksCompleted !== 0
+          ? statistics.tasksCompleted - 1
+          : 0;
 
     return await this.prisma.statistics.update({
       where: {
