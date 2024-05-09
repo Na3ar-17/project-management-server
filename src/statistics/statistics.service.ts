@@ -16,6 +16,13 @@ export class StatisticsService {
       where: {
         projectId,
       },
+      include: {
+        project: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
     });
 
     if (!statistics)
@@ -72,6 +79,19 @@ export class StatisticsService {
       },
       data: {
         tasksCompleted: newData,
+      },
+    });
+  }
+
+  async updateTasksDeleted(projectId: string) {
+    const statistics = await this.getByProjectId(projectId);
+
+    return await this.prisma.statistics.update({
+      where: {
+        projectId: projectId,
+      },
+      data: {
+        tasksDeleted: statistics.tasksCompleted + 1,
       },
     });
   }
