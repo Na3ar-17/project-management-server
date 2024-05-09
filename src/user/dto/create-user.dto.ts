@@ -11,9 +11,6 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  companyName?: string;
-
-  @IsString()
   @MinLength(6, { message: 'Password must contains at least 6 characters' })
   password: string;
 }

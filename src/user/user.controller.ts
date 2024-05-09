@@ -12,6 +12,7 @@ import {
   Put,
   UseInterceptors,
   UploadedFile,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +20,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -43,8 +45,11 @@ export class UserController {
 
   @Delete()
   @Auth()
-  async delete(@CurrentUser('id') id: string) {
-    return this.userService.delete(id);
+  async delete(
+    @CurrentUser('id') id: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.userService.delete(id, res);
   }
 
   @Auth()

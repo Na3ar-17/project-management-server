@@ -3,6 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'argon2';
+import { Response } from 'express';
+import { REFRESH_TOKEN_NAME } from 'src/constants/tokens.constants';
 
 @Injectable()
 export class UserService {
@@ -39,7 +41,6 @@ export class UserService {
       data: {
         email: dto.email,
         fullName: dto.fullName,
-        companyName: dto.companyName || '',
         password: await hash(dto.password),
         imgLink: '',
       },
@@ -64,7 +65,6 @@ export class UserService {
       data,
       select: {
         fullName: true,
-        companyName: true,
         imgLink: true,
         email: true,
       },
@@ -73,13 +73,9 @@ export class UserService {
     return user;
   }
 
-  async delete(id: string) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
-
+  async delete(id: string, res: Response) {
+    const user = await this.getById(id);
+    await this.removeRefreshTokenFromResponse(res);
     return this.prisma.user.delete({
       where: {
         id: user.id,
@@ -115,5 +111,16 @@ export class UserService {
     });
 
     return users;
+  }
+
+  removeRefreshTokenFromResponse(res: Response) {
+    res.cookie(REFRESH_TOKEN_NAME, '', {
+      httpOnly: true,
+      domain: 'localhost',
+      expires: new Date(0),
+      secure: true,
+      // lax if production
+      sameSite: 'none',
+    });
   }
 }

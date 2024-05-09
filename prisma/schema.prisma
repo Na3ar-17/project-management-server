@@ -15,7 +15,6 @@ model User {
   fullName    String
   email       String  @unique
   imgLink     String?
-  companyName String?
   password    String
 
   projects              Project[]

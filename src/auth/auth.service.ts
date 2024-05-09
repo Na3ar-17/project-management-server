@@ -12,11 +12,11 @@ import { verify } from 'argon2';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { Response, response } from 'express';
 import { format } from 'date-fns';
+import { REFRESH_TOKEN_NAME } from 'src/constants/tokens.constants';
 
 @Injectable()
 export class AuthService {
   EXPIRE_DAY_REFRESH_TOKEN = 1;
-  REFRESH_TOKEN_NAME = 'refreshToken';
 
   constructor(
     private jwt: JwtService,
@@ -95,21 +95,10 @@ export class AuthService {
     const expiresIn = new Date();
     expiresIn.setDate(expiresIn.getDate() + this.EXPIRE_DAY_REFRESH_TOKEN);
 
-    res.cookie(this.REFRESH_TOKEN_NAME, refreshToken, {
+    res.cookie(REFRESH_TOKEN_NAME, refreshToken, {
       httpOnly: true,
       domain: 'localhost',
       expires: expiresIn,
-      secure: true,
-      // lax if production
-      sameSite: 'none',
-    });
-  }
-
-  removeRefreshTokenFromResponse(res: Response) {
-    res.cookie(this.REFRESH_TOKEN_NAME, '', {
-      httpOnly: true,
-      domain: 'localhost',
-      expires: new Date(0),
       secure: true,
       // lax if production
       sameSite: 'none',
