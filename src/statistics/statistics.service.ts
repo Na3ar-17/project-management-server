@@ -16,9 +16,13 @@ export class StatisticsService {
       where: {
         projectId,
       },
-      include: {
+      select: {
+        projectId: true,
+        tasksCompleted: true,
+        tasksDeleted: true,
+        createdAt: true,
         project: {
-          include: {
+          select: {
             tasks: true,
           },
         },
@@ -91,7 +95,7 @@ export class StatisticsService {
         projectId: projectId,
       },
       data: {
-        tasksDeleted: statistics.tasksCompleted + 1,
+        tasksDeleted: statistics.tasksDeleted + 1,
       },
     });
   }

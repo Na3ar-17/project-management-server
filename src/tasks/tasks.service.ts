@@ -90,6 +90,8 @@ export class TasksService {
   async delete(projectId: string, id: string) {
     const task = await this.getOneById(projectId, id);
 
+    await this.statisticsService.updateTasksDeleted(projectId);
+
     const deleted = await this.prisma.task.delete({
       where: {
         id: task.id,
