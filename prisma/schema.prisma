@@ -104,7 +104,6 @@ model Task {
   dueDate     String           @map("due_date")
   description String?
   status      EnumTaskStatus   @default(inQueue)
-  beenCompletedBefore Boolean @default(false) @map("been_completed_before")
 
   createdBy Member? @relation(fields: [memberId], references: [id])
 
