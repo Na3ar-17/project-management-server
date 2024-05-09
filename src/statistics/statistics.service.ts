@@ -51,15 +51,25 @@ export class StatisticsService {
     });
   }
 
-  async incrementTasksCompleted(projectId: string) {
+  async updateTasksCompleted({
+    projectId,
+    type,
+  }: {
+    projectId: string;
+    type: 'increment' | 'decrement';
+  }) {
     const statistics = await this.getByProjectId(projectId);
+    const newData =
+      type === 'increment'
+        ? statistics.tasksCompleted + 1
+        : statistics.tasksCompleted - 1;
 
     return await this.prisma.statistics.update({
       where: {
         projectId,
       },
       data: {
-        tasksCompleted: statistics.tasksCompleted + 1,
+        tasksCompleted: newData,
       },
     });
   }

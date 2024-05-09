@@ -104,6 +104,7 @@ model Task {
   dueDate     String           @map("due_date")
   description String?
   status      EnumTaskStatus   @default(inQueue)
+  previousStatus EnumTaskStatus? @map("previous_status")
 
   createdBy Member? @relation(fields: [memberId], references: [id])
 

@@ -4,10 +4,11 @@ import { TasksController } from './tasks.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProjectService } from 'src/project/project.service';
 import { ProjectModule } from 'src/project/project.module';
+import { StatisticsModule } from 'src/statistics/statistics.module';
 
 @Module({
   controllers: [TasksController],
   providers: [TasksService, PrismaService, ProjectService],
-  imports: [ProjectModule],
+  imports: [ProjectModule, StatisticsModule],
 })
 export class TasksModule {}

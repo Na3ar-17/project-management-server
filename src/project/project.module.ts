@@ -9,5 +9,6 @@ import { StatisticsModule } from 'src/statistics/statistics.module';
   controllers: [ProjectController],
   providers: [ProjectService, PrismaService, StatisticsService],
   exports: [ProjectService, StatisticsService],
+  imports: [StatisticsModule],
 })
 export class ProjectModule {}

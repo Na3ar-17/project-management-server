@@ -1,16 +1,15 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { NextFunction, Request, Response } from 'express';
-import { ProjectService } from 'src/project/project.service';
+import { StatisticsService } from 'src/statistics/statistics.service';
+import { isDateBefore } from 'src/utils/dateChecker';
 
 @Injectable()
 export class TasksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private statisticsService: StatisticsService,
+  ) {}
 
   async getAll(projectId: string) {
     const tasks = await this.prisma.task.findMany({
@@ -100,6 +99,15 @@ export class TasksService {
 
   async update(dto: UpdateTaskDto) {
     const task = await this.getOneById(dto.projectId, dto.id);
+
+    isDateBefore({ createdAt: task.createdAt, deadLine: dto.dueDate });
+
+    if (dto.status === 'completed') {
+      this.statisticsService.updateTasksCompleted({
+        projectId: task.projectId,
+        type: 'increment',
+      });
+    }
 
     const updated = await this.prisma.task.update({
       where: {
