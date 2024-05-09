@@ -85,7 +85,7 @@ model Statistics {
   project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   tasksCompleted Int @default(0) @map("tasks_completed")
-  tasksCreated   Int @default(0) @map("tasks_created")
+
   tasksDeleted   Int @default(0) @map("tasks_deleted")
   members        Int @default(0)
 
