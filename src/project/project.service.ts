@@ -8,6 +8,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { slugify } from 'src/utils/slugGenerator';
 import { StatisticsService } from 'src/statistics/statistics.service';
+import { isBefore } from 'date-fns';
+import { isDateBefore } from 'src/utils/dateChecker';
 
 @Injectable()
 export class ProjectService {
@@ -116,23 +118,8 @@ export class ProjectService {
 
   async update(dto: UpdateProjectDto, userId: string) {
     const project = await this.getById(userId, dto.id);
-    //TODO validate if the name has
 
-    if (dto.name && dto.name !== project.name) {
-      const existingProjects = await this.prisma.project.findMany({
-        where: {
-          userId,
-          name: dto.name,
-          id: {
-            not: dto.id,
-          },
-        },
-      });
-
-      if (existingProjects.length > 0) {
-        throw new BadRequestException('Project name must be unique');
-      }
-    }
+    isDateBefore({ deadLine: dto.end, createdAt: project.createdAt });
 
     const updated = await this.prisma.project.update({
       where: {

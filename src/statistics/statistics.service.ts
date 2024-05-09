@@ -45,8 +45,21 @@ export class StatisticsService {
       where: {
         projectId,
         project: {
-          id: projectId,
+          id: statistics.projectId,
         },
+      },
+    });
+  }
+
+  async incrementTasksCompleted(projectId: string) {
+    const statistics = await this.getByProjectId(projectId);
+
+    return await this.prisma.statistics.update({
+      where: {
+        projectId,
+      },
+      data: {
+        tasksCompleted: statistics.tasksCompleted + 1,
       },
     });
   }
