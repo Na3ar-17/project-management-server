@@ -1,6 +1,12 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { EnumTaskPriority, EnumTaskStatus } from '@prisma/client';
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class UpdateTaskDto {
   @IsString()
@@ -30,4 +36,8 @@ export class UpdateTaskDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isCompleted?: boolean;
 }

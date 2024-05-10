@@ -3,6 +3,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StatisticsService } from 'src/statistics/statistics.service';
 import { isDateBefore } from 'src/utils/dateChecker';
+import { EnumTaskPriority, EnumTaskStatus } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
@@ -75,6 +76,7 @@ export class TasksService {
         description: '',
         priority: 'low',
         status: 'inQueue',
+        isCompleted: false,
         dueDate: '',
         project: {
           connect: {
@@ -104,21 +106,28 @@ export class TasksService {
 
   async update(dto: UpdateTaskDto) {
     const task = await this.getOneById(dto.projectId, dto.id);
-
     isDateBefore({ createdAt: task.createdAt, deadLine: dto.dueDate });
 
-    if (dto.status == 'completed') {
-      await this.statisticsService.updateTasksCompleted({
-        projectId: task.projectId,
-        type: 'increment',
-      });
+    const updateData = {
+      title: dto.title || task.title,
+      description: dto.description,
+      status: dto.status || task.status,
+      priority: dto.priority || task.priority,
+      dueDate: dto.dueDate || task.dueDate,
+      isCompleted: dto.isCompleted || task.isCompleted,
+    };
+
+    if (dto.status === 'completed' || dto.isCompleted == true) {
+      updateData.isCompleted = true;
+      updateData.status = 'completed';
+    } else {
+      updateData.isCompleted = false;
+      updateData.status = dto.status;
     }
 
-    if (dto.status !== 'completed') {
-      await this.statisticsService.updateTasksCompleted({
-        projectId: task.projectId,
-        type: 'decrement',
-      });
+    if (dto.isCompleted === false) {
+      updateData.status = 'testing';
+      updateData.isCompleted = dto.isCompleted;
     }
 
     const updated = await this.prisma.task.update({
@@ -126,14 +135,10 @@ export class TasksService {
         id: dto.id,
         projectId: dto.projectId,
       },
-      data: {
-        title: dto.title || task.title,
-        description: dto.description,
-        status: dto.status || task.status,
-        priority: dto.priority || task.priority,
-        dueDate: dto.dueDate || task.dueDate,
-      },
+      data: updateData,
     });
+
+    console.log(updated.status);
 
     return updated;
   }
