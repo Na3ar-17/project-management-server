@@ -114,7 +114,7 @@ export class TasksService {
       status: dto.status || task.status,
       priority: dto.priority || task.priority,
       dueDate: dto.dueDate || task.dueDate,
-      isCompleted: dto.isCompleted || task.isCompleted,
+      isCompleted: dto.isCompleted,
     };
 
     if (dto.status === 'completed' || dto.isCompleted == true) {
@@ -125,7 +125,7 @@ export class TasksService {
       updateData.status = dto.status;
     }
 
-    if (dto.isCompleted === false) {
+    if (dto.isCompleted === false && dto.status === 'completed') {
       updateData.status = 'testing';
       updateData.isCompleted = dto.isCompleted;
     }
@@ -137,8 +137,6 @@ export class TasksService {
       },
       data: updateData,
     });
-
-    console.log(updated.status);
 
     return updated;
   }
