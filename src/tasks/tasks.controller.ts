@@ -9,6 +9,7 @@ import {
   Put,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { UpdateTaskDto } from './dto/update-task.dto';

@@ -18,7 +18,7 @@ export class TasksService {
         projectId,
       },
       orderBy: {
-        createdAt: 'asc',
+        createdAt: 'desc',
       },
       include: {
         subTasks: true,
@@ -120,6 +120,11 @@ export class TasksService {
     if (dto.status === 'completed' || dto.isCompleted == true) {
       updateData.isCompleted = true;
       updateData.status = 'completed';
+
+      this.statisticsService.updateTasksCompleted({
+        projectId: dto.projectId,
+        type: 'increment',
+      });
     } else {
       updateData.isCompleted = false;
       updateData.status = dto.status;

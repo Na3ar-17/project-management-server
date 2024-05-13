@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { isBefore } from 'date-fns';
+import { isBefore, isYesterday } from 'date-fns';
 
 export const isDateBefore = ({
   createdAt,
@@ -10,7 +10,7 @@ export const isDateBefore = ({
   deadLine: string;
   message?: string;
 }) => {
-  if (isBefore(deadLine, createdAt)) {
+  if (isBefore(deadLine, createdAt) || isYesterday(deadLine)) {
     throw new BadRequestException(message);
   }
 };

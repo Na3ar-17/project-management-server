@@ -4,12 +4,17 @@ import { CreateSubTaskDto } from './create-sub_task.dto';
 
 export class UpdateSubTaskDto extends PartialType(CreateSubTaskDto) {
   @IsString()
-  id: string;
+  @IsOptional()
+  id?: string;
 
   @IsString()
-  taskId: string;
+  @IsOptional()
+  taskId?: string;
 
   @IsBoolean()
   @IsOptional()
   isCompleted?: boolean;
+
+  @MaxLength(30, { message: 'Title is too long' })
+  title?: string;
 }
