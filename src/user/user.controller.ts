@@ -13,6 +13,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
+  BadRequestException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -59,5 +60,16 @@ export class UserController {
     @CurrentUser('id') userId: string,
   ) {
     return await this.userService.searchByEmail(data.email, userId);
+  }
+
+  @Post('/get-by-email')
+  async getByEmail(@Body() data: { email: string }) {
+    const user = await this.userService.getByEmail(data.email);
+
+    if (!user) {
+      throw new BadRequestException('Invalid email');
+    }
+
+    return user;
   }
 }

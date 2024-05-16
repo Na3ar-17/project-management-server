@@ -12,11 +12,11 @@ export class NodemailerService {
   async send() {
     return await this.mailerService
       .sendMail({
-        to: 'gavruk2017@gmail.com', // list of receivers
-        from: await this.configService.get('USER_EMAIL_SENDER'), // sender address
-        subject: 'Testing Nest MailerModule ✔', // Subject line
-        text: 'welcome', // plaintext body
-        html: '<b>welcome</b>', // HTML body content
+        to: 'gavruluknazar0210@gmail.com',
+        from: await this.configService.get('USER_EMAIL_SENDER'),
+        subject: 'Testing Nest MailerModule ✔',
+        text: 'welcome',
+        html: '<b>welcome</b>',
       })
       .then(() => {})
       .catch((e) => {
