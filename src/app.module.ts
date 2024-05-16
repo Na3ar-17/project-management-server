@@ -10,8 +10,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { SubTaskModule } from './sub_task/sub_task.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
-
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -25,7 +24,16 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
     NotificationsModule,
     MailerModule.forRoot({
       transport: 'smtps://user@domain.com:pass@smtp.domain.com',
-      defaults: {},
+      defaults: {
+        from: '"nest-modules" <modules@nestjs.com>',
+      },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new PugAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
   ],
   controllers: [],
