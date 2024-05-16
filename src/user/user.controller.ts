@@ -70,6 +70,8 @@ export class UserController {
       throw new BadRequestException('Invalid email');
     }
 
-    return user;
+    return {
+      success: true,
+    };
   }
 }
