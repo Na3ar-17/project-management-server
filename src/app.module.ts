@@ -11,6 +11,7 @@ import { SubTaskModule } from './sub_task/sub_task.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { NodemailerModule } from './nodemailer/nodemailer.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -35,6 +36,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         },
       },
     }),
+    NodemailerModule,
   ],
   controllers: [],
   providers: [PrismaService],
