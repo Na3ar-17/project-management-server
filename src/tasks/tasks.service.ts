@@ -3,7 +3,6 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StatisticsService } from 'src/statistics/statistics.service';
 import { isDateBefore } from 'src/utils/dateChecker';
-import { EnumTaskPriority, EnumTaskStatus } from '@prisma/client';
 
 @Injectable()
 export class TasksService {
