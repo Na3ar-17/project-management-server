@@ -8,6 +8,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsEmail()
+  @MaxLength(30, { message: 'Email is too long' })
   email: string;
 
   @IsString()
