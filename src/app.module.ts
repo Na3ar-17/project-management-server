@@ -9,6 +9,8 @@ import { FilesModule } from './files/files.module';
 import { TasksModule } from './tasks/tasks.module';
 import { SubTaskModule } from './sub_task/sub_task.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 
 @Module({
   imports: [
@@ -21,6 +23,10 @@ import { NotificationsModule } from './notifications/notifications.module';
     TasksModule,
     SubTaskModule,
     NotificationsModule,
+    MailerModule.forRoot({
+      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
+      defaults: {},
+    }),
   ],
   controllers: [],
   providers: [PrismaService],
