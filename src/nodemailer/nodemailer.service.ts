@@ -11,39 +11,34 @@ export class NodemailerService {
     private jwt: JwtService,
   ) {}
 
-  async send() {
-    // return await this.mailerService
-    //   .sendMail({
-    //     to: 'gavruluknazar0210@gmail.com',
-    //     from: await this.configService.get('USER_EMAIL_SENDER'),
-    //     subject: 'Testing Nest MailerModule ✔',
-    //     text: 'welcome',
-    //     html: '<b>welcome</b>',
-    //   })
-    //   .then(() => {
-    //     console.log('sent');
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
-
-    const accessTokenSession = this.createAccessToken(
-      'gavruluknazar0210@gmail.com',
-    );
-    return accessTokenSession;
+  async sendOTPCode(data: { email: string }) {
+    return await this.mailerService
+      .sendMail({
+        to: data.email,
+        from: await this.configService.get('USER_EMAIL_SENDER'),
+        subject: 'Testing Nest MailerModule ✔',
+        text: 'Your OTP code to for',
+        html: '<b>welcome</b>',
+      })
+      .then(() => {
+        console.log('sent');
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
-  private async createAccessToken(
+  private async createPasswordResetToken(
     email: string = 'gavruluknazar0210@gmail.com',
   ) {
     const key = await this.configService.get('RESTORE_PASSWORD_TOKEN');
     const data = { email };
 
-    const accessTokenSession = await this.jwt.sign(data, {
+    const passwordResetToken = await this.jwt.sign(data, {
       expiresIn: '2m',
       secret: key,
     });
 
-    return { accessTokenSession };
+    return { passwordResetToken };
   }
 }
