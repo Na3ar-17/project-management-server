@@ -8,5 +8,6 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [NodemailerController],
   providers: [NodemailerService],
   imports: [ConfigModule, JwtModule],
+  exports: [NodemailerModule, NodemailerService],
 })
 export class NodemailerModule {}

@@ -14,6 +14,7 @@ import {
   UploadedFile,
   Res,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,7 +22,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -44,6 +46,12 @@ export class UserController {
     return this.userService.update(id, dto);
   }
 
+  @Put('password')
+  @UsePipes(new ValidationPipe())
+  async updatePassword(@Body() dto: UpdatePasswordDto) {
+    return await this.userService.updatePassword(dto);
+  }
+
   @Delete()
   @Auth()
   async delete(
@@ -63,15 +71,15 @@ export class UserController {
   }
 
   @Post('/get-by-email')
-  async getByEmail(@Body() data: { email: string }) {
-    const user = await this.userService.getByEmail(data.email);
-
-    if (!user) {
-      throw new BadRequestException('Invalid email');
-    }
-
-    return {
-      success: true,
-    };
+  async getByEmail(
+    @Body() data: { email: string },
+    @Res({ passthrough: true }) res: Response,
+    @Req() req: Request,
+  ) {
+    return await this.userService.getByEmailForPasswordResetting(
+      data.email,
+      res,
+      req,
+    );
   }
 }

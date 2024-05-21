@@ -52,7 +52,7 @@ const accessToken = oauth2Client.getAccessToken();
       defaults: {
         from: '"nest-modules" <modules@nestjs.com>',
       },
-      preview: true,
+      preview: false,
       template: {
         dir: __dirname + '/templates',
         adapter: new PugAdapter(),
