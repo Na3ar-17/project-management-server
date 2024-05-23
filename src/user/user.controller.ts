@@ -48,8 +48,11 @@ export class UserController {
 
   @Put('password')
   @UsePipes(new ValidationPipe())
-  async updatePassword(@Body() dto: UpdatePasswordDto) {
-    return await this.userService.updatePassword(dto);
+  async updatePassword(
+    @Body() dto: UpdatePasswordDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return await this.userService.updatePassword(dto, res);
   }
 
   @Delete()
@@ -71,15 +74,12 @@ export class UserController {
   }
 
   @Post('/get-by-email')
-  async getByEmail(
-    @Body() data: { email: string },
-    @Res({ passthrough: true }) res: Response,
-    @Req() req: Request,
-  ) {
-    return await this.userService.getByEmailForPasswordResetting(
-      data.email,
-      res,
-      req,
-    );
+  async getByEmail(@Body() data: { email: string }, @Req() req: Request) {
+    return await this.userService.getByEmailForPasswordRecover(data.email, req);
+  }
+
+  @Post('/verify-token/:token')
+  async verifyToken(@Param('token') token: string) {
+    return await this.userService.verifyToken(token);
   }
 }

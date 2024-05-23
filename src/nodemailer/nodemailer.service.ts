@@ -13,37 +13,11 @@ export class NodemailerService {
     private jwt: JwtService,
   ) {}
 
-  async sendOTPCode(data: { email: string }) {
-    const code = Math.floor(Math.random() * 1000000 + 1);
-    const { passwordResetToken } = await this.createPasswordResetToken(
-      data.email,
-    );
-
-    const mail = await this.mailerService
-      .sendMail({
-        to: data.email,
-        from: await this.configService.get('USER_EMAIL_SENDER'),
-        subject: 'Code for password resetting',
-        text: 'Your code',
-        html: `<b style="font-size:20px;">${code}</b>`,
-      })
-      .then(() => {})
-      .catch((e) => {
-        console.log(e);
-      });
-
-    return {
-      mail,
-      code,
-      passwordResetToken,
-    };
-  }
-
   async sendLink(data: { email: string }, req: Request) {
-    const { passwordResetToken } = await this.createPasswordResetToken(
+    const { recoverPasswordToken } = await this.createRecoverPasswordToken(
       data.email,
     );
-    const link = `http://localhost:3000/${req.cookies['NEXT_LOCALE']}/reset-password/reset/${passwordResetToken}`;
+    const url = `http://localhost:3000/${req.cookies['NEXT_LOCALE']}/recover/${recoverPasswordToken}`;
 
     await this.mailerService
       .sendMail({
@@ -51,9 +25,93 @@ export class NodemailerService {
         from: await this.configService.get('USER_EMAIL_SENDER'),
         subject: 'Rest password',
         text: 'Your url',
-        html: `<div style="font-size:20px;">
-        <a class="color:blue;" href="${link}" target="_blank" ">Click here to set a new password!</a>
-        </div>`,
+        html: `
+        <div
+        style="
+          background-color: #1c1c1c;
+          padding: 20px;
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+        "
+      >
+        <div
+          style="
+            max-width: 600px;
+            margin: auto;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              background-color: #373737;
+              color: #ffffff;
+              padding: 20px;
+              text-align: center;
+              font-size: 24px;
+              font-weight: bold;
+            "
+          >
+            Password Reset
+          </div>
+          <div style="padding: 20px">
+            <p style="font-size: 16px; color: #b4b4b4">Hello,</p>
+            <p style="font-size: 16px; color: #b4b4b4">
+              We received a request to reset your password.Click the button below
+              to reset it:
+            </p>
+            <div style="text-align: center; margin: 20px 0">
+              <a
+                href="${url}"
+                target="_blank"
+                style="
+                  display: inline-block;
+                  background-color: #268bff;
+                  background-image: linear-gradient(#268bff, hsl(252, 82, 57));
+                  color: #ffffff;
+                  padding: 12px 20px;
+                  border-radius: 4px;
+                  text-decoration: none;
+                  font-size: 16px;
+                  border: none;
+                  text-align: center;
+                  -webkit-appearance: none;
+                  -moz-appearance: none;
+                  appearance: none;
+                "
+              >
+                Reset Password
+              </a>
+            </div>
+            <p style="font-size: 16px; color: #b4b4b4">
+              If you didn't request a password reset, please ignore this email or
+              contact support if you have questions.
+            </p>
+            <p style="font-size: 16px; color: #b4b4b4">Thanks,</p>
+            <p style="font-size: 16px; color: #b4b4b4">The Team</p>
+          </div>
+          <div
+            style="
+              background-color: #333333;
+              padding: 20px;
+              text-align: center;
+              font-size: 14px;
+              color: #666666;
+            "
+          >
+            <p style="color: #666666">
+              If you're having trouble with the button above, copy and paste the
+              URL below into your web browser:
+            </p>
+            <a href="${url}" target="_blank" style="color: #268bff"
+              >${url}</a
+            >
+          </div>
+        </div>
+      </div>
+      `,
       })
       .then(() => {})
       .catch((e) => {
@@ -61,36 +119,20 @@ export class NodemailerService {
       });
 
     return {
-      passwordResetToken,
-      link,
+      recoverPasswordToken,
+      url,
     };
   }
 
-  private async createPasswordResetToken(email: string) {
+  private async createRecoverPasswordToken(email: string) {
     const key = await this.configService.get('RECOVER_PASSWORD_TOKEN');
     const data = { email };
 
-    const passwordResetToken = await this.jwt.sign(data, {
+    const recoverPasswordToken = await this.jwt.sign(data, {
       expiresIn: '2m',
       secret: key,
     });
 
-    return { passwordResetToken };
-  }
-
-  async addPasswordResetTokenToResponse(
-    res: Response,
-    recoverPasswordToken: string,
-  ) {
-    const expiresIn = new Date();
-    expiresIn.setDate(expiresIn.getDate() + 2);
-
-    res.cookie(RECOVER_PASSWORD, recoverPasswordToken, {
-      httpOnly: true,
-      domain: 'localhost',
-      expires: expiresIn,
-      secure: true,
-      sameSite: 'none',
-    });
+    return { recoverPasswordToken };
   }
 }

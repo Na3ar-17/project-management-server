@@ -9,6 +9,7 @@ import { NodemailerService } from 'src/nodemailer/nodemailer.service';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { apigateway } from 'googleapis/build/src/apis/apigateway';
 
 @Injectable()
 export class UserService {
@@ -37,24 +38,15 @@ export class UserService {
     });
   }
 
-  async getByEmailForPasswordResetting(
-    email: string,
-    res: Response,
-    req: Request,
-  ) {
+  async getByEmailForPasswordRecover(email: string, req: Request) {
     const user = await this.getByEmail(email);
 
     if (user) {
-      const { passwordResetToken, link } = await this.nodemailer.sendLink(
+      await this.nodemailer.sendLink(
         {
           email,
         },
         req,
-      );
-
-      await this.nodemailer.addPasswordResetTokenToResponse(
-        res,
-        passwordResetToken,
       );
     }
 
@@ -148,7 +140,7 @@ export class UserService {
     return users;
   }
 
-  async updatePassword(dto: UpdatePasswordDto) {
+  async updatePassword(dto: UpdatePasswordDto, res: Response) {
     const { token, password } = dto;
 
     const tokenData = await this.jwt.verify(token, {
@@ -167,13 +159,20 @@ export class UserService {
     return updated;
   }
 
+  async verifyToken(token: string) {
+    const tokenData = await this.jwt.verify(token, {
+      secret: await this.configService.get('RECOVER_PASSWORD_TOKEN'),
+    });
+
+    return tokenData;
+  }
+
   removeRefreshTokenFromResponse(res: Response) {
     res.cookie(REFRESH_TOKEN_NAME, '', {
       httpOnly: true,
       domain: 'localhost',
       expires: new Date(0),
       secure: true,
-      // lax if production
       sameSite: 'none',
     });
   }
