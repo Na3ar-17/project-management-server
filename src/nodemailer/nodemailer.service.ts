@@ -2,8 +2,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Request, Response } from 'express';
-import { RECOVER_PASSWORD } from 'src/constants/tokens.constants';
+import { Request } from 'express';
+
+type TypeLanguages = 'ua' | 'en';
 
 @Injectable()
 export class NodemailerService {
@@ -17,14 +18,15 @@ export class NodemailerService {
     const { recoverPasswordToken } = await this.createRecoverPasswordToken(
       data.email,
     );
-    const url = `http://localhost:3000/${req.cookies['NEXT_LOCALE']}/recover/${recoverPasswordToken}`;
+    const lang: TypeLanguages = await req.cookies['NEXT_LOCALE'];
+    const url = `http://localhost:3000/${lang}/recover/${recoverPasswordToken}`;
 
     await this.mailerService
       .sendMail({
         to: data.email,
         from: await this.configService.get('USER_EMAIL_SENDER'),
-        subject: 'Rest password',
-        text: 'Your url',
+        subject: `${lang === 'en' ? 'Rest password' : 'Змініть пароль'}`,
+        text: `${lang === 'en' ? 'Your url' : 'Ваше посилання'}`,
         html: `
         <div
         style="
@@ -54,13 +56,18 @@ export class NodemailerService {
               font-weight: bold;
             "
           >
-            Password Reset
+            
+            ${lang === 'en' ? 'Password Reset' : 'Зміна паролю'}
           </div>
           <div style="padding: 20px">
-            <p style="font-size: 16px; color: #b4b4b4">Hello,</p>
-            <p style="font-size: 16px; color: #b4b4b4">
-              We received a request to reset your password.Click the button below
-              to reset it:
+            <p style="font-size: 16px; color: #b4b4b4">${lang === 'en' ? 'Hello,' : 'Привіт,'}</p>
+            <p style="font-size: 16px; color: #b4b4b4"> 
+            ${
+              lang === 'en'
+                ? 'We received a request to reset your password.Click the button below to reset it:'
+                : 'Ми отримали запит на зміну вашого паролю. Натисніть кнопку нижче щоб скинути його:'
+            }
+              
             </p>
             <div style="text-align: center; margin: 20px 0">
               <a
@@ -82,15 +89,23 @@ export class NodemailerService {
                   appearance: none;
                 "
               >
-                Reset Password
+              ${lang === 'en' ? 'Reset Password' : 'Змініть пароль'}
               </a>
             </div>
             <p style="font-size: 16px; color: #b4b4b4">
-              If you didn't request a password reset, please ignore this email or
-              contact support if you have questions.
+              
+              ${
+                lang === 'en'
+                  ? "If you didn't request a password reset, please ignore this email or contact support if you have questions."
+                  : 'Якщо ви не надсилали запит на зміну пароля, проігноруйте цей лист або зверніться до служби підтримки, якщо у вас виникнуть запитання'
+              }
             </p>
-            <p style="font-size: 16px; color: #b4b4b4">Thanks,</p>
-            <p style="font-size: 16px; color: #b4b4b4">The Team</p>
+            ${
+              lang === 'en'
+                ? `<p style="font-size: 16px; color: #b4b4b4">Thanks,</p>
+                  <p style="font-size: 16px; color: #b4b4b4">The Team</p>`
+                : `<p style="font-size: 16px; color: #b4b4b4">Дякуємо</p>`
+            }
           </div>
           <div
             style="
@@ -102,8 +117,12 @@ export class NodemailerService {
             "
           >
             <p style="color: #666666">
-              If you're having trouble with the button above, copy and paste the
-              URL below into your web browser:
+              
+              ${
+                lang === 'en'
+                  ? "If you're having trouble with the button above, copy and paste the URL below into your web browser:"
+                  : 'Якщо у вас виникли проблеми з кнопкою вище, скопіюйте та вставте URL-адресу нижче у ваш веб-браузер:'
+              }
             </p>
             <a href="${url}" target="_blank" style="color: #268bff"
               >${url}</a
