@@ -10,6 +10,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { apigateway } from 'googleapis/build/src/apis/apigateway';
+import { UpdateEmailDto } from './dto/update-email.dto';
 
 @Injectable()
 export class UserService {
@@ -158,6 +159,8 @@ export class UserService {
 
     return updated;
   }
+
+  async updateEmail(dto: UpdateEmailDto) {}
 
   async verifyToken(token: string) {
     const tokenData = await this.jwt.verify(token, {
